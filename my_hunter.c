@@ -7,6 +7,34 @@
 
 #include "include/my_hunter.h"
 
+const char *files_nico[] = {
+    "./sound/weare.ogg",
+    "./sound/roblox.wav",
+    "./end.png",
+    "./ruche.jpg",
+    "./sprites/usooprun.png",
+    "./sprites/gearfourth.png",
+    "./sprites/doflamingo.png",
+    "./sprites/target.png",
+    "./sprites/sound.png",
+    "./sprites/pause.png",
+    "./sprites/projectile.png",
+    "./sprites/die.png",
+    "./sprites/fireusoop.png",
+    "./sprites/logo.png",
+    "./sprites/barbenoir.png",
+    "./sprites/cursor.png",
+    "./sprites/luffyfire.png",
+    "./sprites/dure.png",
+    "./sprites/logo_marine.png",
+    "./sprites/soundoff.png",
+    "./sprites/bras.png",
+    "./sprites/luccirun.png",
+    "./dressrosa.png",
+    "./font/arial.ttf",
+    "./map.png"
+};
+
 static int readme(int ac, char **argv)
 {
     int fd;
@@ -30,8 +58,8 @@ void cleanup(struct sprite *usoop, struct sprite *ennemie, sprite
     sfTexture_destroy(usoop->texture);
     sfSprite_destroy(usoop->sprite);
     sfClock_destroy(usoop->clock);
-    sfMusic_destroy(usoop->music);
-    sfText_destroy(usoop->score.text);
+    if (usoop->score.text != NULL)
+        sfText_destroy(usoop->score.text);
     sfRectangleShape_destroy(usoop->life.bar);
     sfRectangleShape_destroy(usoop->back_life.bar);
     sfTexture_destroy(ennemie->texture);
@@ -42,10 +70,26 @@ void cleanup(struct sprite *usoop, struct sprite *ennemie, sprite
     sfClock_destroy(background->clock);
 }
 
+static int verify_assets(void)
+{
+    int fd;
+
+    for (int i = 0; i < 25; i++) {
+        fd = open(files_nico[i], O_RDONLY);
+        if (fd == -1)
+            return 84;
+        if (close(fd) == -1)
+            return 84;
+    }
+    return 0;
+}
+
 int main(int ac, char **av)
 {
     if (ac > 1)
         return readme(ac, av);
+    if (verify_assets() == 84)
+        return 84;
     return my_hunter();
 }
 

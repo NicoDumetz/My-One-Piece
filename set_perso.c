@@ -37,10 +37,8 @@ void set_perso(sfRenderWindow *window, struct sprite *usoop)
     usoop->pos.y = 650;
     usoop->scale.x = -1.5;
     usoop->scale.y = 1.5;
-    usoop->rect.top = 0;
-    usoop->rect.left = 0;
-    usoop->rect.width = 150;
-    usoop->rect.height = 161;
+    usoop->rect = (sfIntRect){0, 0, 150, 161};
+    usoop->score.text = NULL;
     usoop->perso = 'u';
     usoop->clock = sfClock_create();
     set_target(usoop);
