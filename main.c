@@ -59,41 +59,6 @@ static void display_life_bar(sfRenderWindow *window, struct sprite *usoop,
     }
 }
 
-static void event_pause(sfRenderWindow *window, struct sprite *background,
-    struct sprite *usoop)
-{
-    sfEvent event;
-
-    while (sfRenderWindow_pollEvent(window, &event)) {
-        if (event.type == sfEvtClosed) {
-            sfRenderWindow_close(window);
-            usoop->pause = 0;
-        }
-        if (event.type == sfEvtKeyReleased && event.key.code == sfKeyEscape)
-            usoop->pause = 0;
-    }
-}
-
-static void pause_game(sfRenderWindow *window, struct sprite *background,
-    struct sprite *usoop)
-{
-    sfTexture *texture = sfTexture_createFromFile("sprites/pause.png",
-    NULL);
-    sfSprite *sprite = sfSprite_create();
-
-    sfSprite_setTexture(sprite, texture, sfTrue);
-    sfRenderWindow_setMouseCursorVisible(window, sfTrue);
-    sfSprite_setPosition(sprite, (sfVector2f){1500 / 2 - 150, 900 / 2 - 150});
-    sfRenderWindow_clear(window, sfWhite);
-    sfRenderWindow_drawSprite(window, sprite, NULL);
-    sfRenderWindow_display(window);
-    while (usoop->pause == 1) {
-        event_pause(window, background, usoop);
-    }
-    sfRenderWindow_setMouseCursorVisible(window, sfFalse);
-    return;
-}
-
 static void disp_cursor(sfRenderWindow *window, struct sprite *ennemie)
 {
     sfTime elapsed = sfClock_getElapsedTime(ennemie->cursor.clock);
@@ -125,13 +90,12 @@ static void display(sfRenderWindow *window, struct sprite *usoop,
     sfRenderWindow_display(window);
 }
 
-static void set_music(void)
+static void set_music(struct sprite *background)
 {
-    sfMusic *music = sfMusic_createFromFile("sound/weare.ogg");
-
-    sfMusic_setLoop(music, sfTrue);
-    sfMusic_setVolume(music, 10);
-    sfMusic_play(music);
+    background->music = sfMusic_createFromFile("sound/weare.ogg");
+    sfMusic_setLoop(background->music, sfTrue);
+    sfMusic_setVolume(background->music, 10);
+    sfMusic_play(background->music);
 }
 
 void game(sfRenderWindow *window, struct sprite *usoop,
@@ -155,7 +119,7 @@ int my_hunter(void)
     struct sprite background;
 
     sfRenderWindow_setFramerateLimit(window, 60);
-    set_music();
+    set_music(&background);
     set_perso(window, &usoop);
     set_ennemie(window, &ennemie);
     set_background(&background);

@@ -109,6 +109,7 @@ int my_putstr(char const *str);
 int my_hunter(void);
 void cleanup(struct sprite *usoop, struct sprite *ennemie, sprite
     *background);
-
+void pause_game(sfRenderWindow *window, struct sprite *background,
+    struct sprite *usoop);
 
 #endif
