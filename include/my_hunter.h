@@ -111,5 +111,7 @@ void cleanup(struct sprite *usoop, struct sprite *ennemie, sprite
     *background);
 void pause_game(sfRenderWindow *window, struct sprite *background,
     struct sprite *usoop);
-
+int my_intlen(long nb);
+void new_highscore(char *buffer, struct sprite *background, struct
+    sprite *usoop, int fd);
 #endif

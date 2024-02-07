@@ -48,3 +48,14 @@ int main(int ac, char **av)
         return readme(ac, av);
     return my_hunter();
 }
+
+void new_highscore(char *buffer, struct sprite *background, struct
+    sprite *usoop, int fd)
+{
+        my_strcat(buffer, int_to_str(background->score.min));
+        my_strcat(buffer, ":");
+        my_strcat(buffer, int_to_str(background->score.sec));
+        sfText_setString(usoop->score.text, buffer);
+        write(fd, buffer, my_strlen(buffer));
+        close(fd);
+}

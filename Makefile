@@ -18,7 +18,8 @@ SRC	=	main.c \
 		my_strlen.c \
 		my_putstr.c \
 		my_hunter.c \
-		pause.c
+		pause.c \
+		my_intlen.c
 
 
 OBJ	=	$(SRC:.c=.o)

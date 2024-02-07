@@ -108,6 +108,50 @@ void die_end(struct sprite *usoop, struct sprite *ennemie)
         usoop->win = 2;
 }
 
+static void set_highscore(char *buffer, char *str, struct sprite *usoop, int
+    fd)
+{
+    my_strcat(buffer, str);
+    sfText_setString(usoop->score.text, buffer);
+    close(fd);
+}
+
+static void get_high(struct sprite *usoop, struct sprite *background)
+{
+    int fd;
+    char str[100];
+    char buffer[200];
+    int min_high;
+    int sec_high;
+
+    buffer[0] = '\0';
+    my_strcat(buffer, "Best Score ");
+    fd = open("high_score.txt", O_RDONLY | O_WRONLY);
+    read(fd, str, 100);
+    min_high = my_getnbr(str + 11);
+    sec_high = my_getnbr(str + (my_intlen(my_getnbr(str)) + 12));
+    if ((min_high == 0 && sec_high == 0) || ( min_high > background->score.
+        min || (min_high == background->score.min && sec_high >
+        background->score.sec) ))
+        return new_highscore(buffer, background, usoop, fd);
+    if (min_high < background->score.min || (min_high == background->score.
+        min && sec_high < background->score.sec))
+        return set_highscore(buffer, str, usoop, fd);
+}
+
+static void set_best_score(struct sprite *usoop, struct sprite *background)
+{
+    sfFont* font = sfFont_createFromFile("font/arial.ttf");
+
+    usoop->score.text = sfText_create();
+    sfText_setFont(usoop->score.text, font);
+    sfText_setCharacterSize(usoop->score.text, 30);
+    sfText_setPosition(usoop->score.text, (sfVector2f){10, 100});
+    sfText_setFillColor(usoop->score.text, sfWhite);
+    sfSprite_setTexture(usoop->sprite, usoop->texture, sfTrue);
+    get_high(usoop, background);
+}
+
 static void set_game_over(struct sprite *background, struct sprite
     *usoop)
 {
@@ -127,6 +171,7 @@ static void set_game_over(struct sprite *background, struct sprite
     my_strcat(buffer, int_to_str(background->score.sec));
     sfText_setString(background->score.text, buffer);
     sfText_setPosition(background->score.text, (sfVector2f){10, 10});
+    set_best_score(usoop, background);
 }
 
 void end_game(sfRenderWindow *window, struct sprite *background, struct sprite
@@ -135,7 +180,9 @@ void end_game(sfRenderWindow *window, struct sprite *background, struct sprite
     if (usoop->win == 1 || usoop->win == 2)
         set_game_over(background, usoop);
     sfRenderWindow_drawSprite(window, background->sprite, NULL);
-    if (usoop->win == 4)
+    if (usoop->win == 4) {
         sfRenderWindow_drawText(window, background->score.text, NULL);
+        sfRenderWindow_drawText(window, usoop->score.text, NULL);
+    }
     sfRenderWindow_display(window);
 }
