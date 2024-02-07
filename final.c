@@ -105,7 +105,7 @@ void die_end(struct sprite *usoop, struct sprite *ennemie)
         sfSprite_setTextureRect(ennemie->sprite, ennemie->rect);
         sfSprite_setTextureRect(ennemie->sprite, ennemie->rect);
     }else if (sfTime_asSeconds(elapsed) >= 1.5)
-        exit(0);
+        usoop->win = 1;
 }
 
 static void set_game_over(struct sprite *background, struct sprite

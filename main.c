@@ -113,8 +113,6 @@ int main(void)
     set_perso(window, &usoop);
     set_ennemie(window, &ennemie);
     set_background(&background);
-    ennemie.kill = 21;
-    background.compt = 1;
     sfRenderWindow_setMouseCursorVisible(window, sfFalse);
     game(window, &usoop, &ennemie, &background);
     sfRenderWindow_destroy(window);
