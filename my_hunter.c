@@ -52,11 +52,30 @@ static int readme(int ac, char **argv)
         return 84;
 }
 
+static cleanup_end(struct sprite *usoop, struct sprite *ennemie, sprite
+    *background)
+{
+    sfClock_destroy(ennemie->clock);
+    sfTexture_destroy(ennemie->proj.texture);
+    sfSprite_destroy(ennemie->proj.sprite);
+    sfTexture_destroy(background->texture);
+    sfSprite_destroy(background->sprite);
+    sfClock_destroy(background->clock);
+    sfTexture_destroy(background->cursor.texture);
+    sfSprite_destroy(background->cursor.sprite);
+    sfTexture_destroy(background->proj.texture);
+    sfSprite_destroy(background->proj.sprite);
+}
+
 void cleanup(struct sprite *usoop, struct sprite *ennemie, sprite
     *background)
 {
     sfTexture_destroy(usoop->texture);
     sfSprite_destroy(usoop->sprite);
+    sfTexture_destroy(usoop->cursor.texture);
+    sfSprite_destroy(usoop->cursor.sprite);
+    sfTexture_destroy(usoop->proj.texture);
+    sfSprite_destroy(usoop->proj.sprite);
     sfClock_destroy(usoop->clock);
     if (usoop->score.text != NULL)
         sfText_destroy(usoop->score.text);
@@ -64,10 +83,7 @@ void cleanup(struct sprite *usoop, struct sprite *ennemie, sprite
     sfRectangleShape_destroy(usoop->back_life.bar);
     sfTexture_destroy(ennemie->texture);
     sfSprite_destroy(ennemie->sprite);
-    sfClock_destroy(ennemie->clock);
-    sfTexture_destroy(background->texture);
-    sfSprite_destroy(background->sprite);
-    sfClock_destroy(background->clock);
+    cleanup_end(usoop, ennemie, background);
 }
 
 static int verify_assets(void)
@@ -84,8 +100,28 @@ static int verify_assets(void)
     return 0;
 }
 
-int main(int ac, char **av)
+static int my_strcmp_for_hunter(char *s1, char *s2)
 {
+    for (int i = 0; s1[i] != '\0' && s2[i] != '\0'; i++) {
+        if (s1[i] != s2[i])
+            return 1;
+    }
+    return 0;
+}
+
+static int check_env(char **env)
+{
+    for (int i = 0; env[i]; i++) {
+        if (my_strcmp_for_hunter(env[i], "DISPLAY=") == 0)
+            return 0;
+    }
+    return 84;
+}
+
+int main(int ac, char **av, char **env)
+{
+    if (check_env(env) == 84)
+        return 84;
     if (ac > 1)
         return readme(ac, av);
     if (verify_assets() == 84)
