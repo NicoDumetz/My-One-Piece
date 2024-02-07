@@ -107,3 +107,23 @@ void die_end(struct sprite *usoop, struct sprite *ennemie)
     }else if (sfTime_asSeconds(elapsed) >= 1.5)
         exit(0);
 }
+
+static void set_game_over(struct sprite *background, struct sprite
+    *usoop)
+{
+    background->texture = sfTexture_createFromFile("end.png", NULL);
+    background->sprite = sfSprite_create();
+    background->scale = (sfVector2f){1.8, 1.30};
+    usoop->win = 3;
+    sfSprite_setTexture(background->sprite, background->texture, sfTrue);
+    sfSprite_setScale(background->sprite, background->scale);
+}
+
+void end_game(sfRenderWindow *window, struct sprite *background, struct sprite
+    *usoop)
+{
+    if (usoop->win == 1)
+        set_game_over(background, usoop);
+    sfRenderWindow_drawSprite(window, background->sprite, NULL);
+    sfRenderWindow_display(window);
+}

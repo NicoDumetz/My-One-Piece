@@ -39,7 +39,7 @@ void pop_event(sfRenderWindow *window, struct sprite *usoop, struct sprite
             event.type == sfEvtMouseButtonPressed)
             key_pressed(window, event, usoop, ennemie);
         if (usoop->life.size.x <= 0)
-            exit(0);
+            usoop->win = 1;
     }
 }
 
@@ -60,6 +60,8 @@ static void display(sfRenderWindow *window, struct sprite *usoop,
 {
     sfTime elapsed = sfClock_getElapsedTime(ennemie->cursor.clock);
 
+    if (usoop->win > 0)
+        return end_game(window, background, usoop);
     display_background(window, background, ennemie);
     sfRenderWindow_drawSprite(window, ennemie->sprite, NULL);
     sfRenderWindow_drawSprite(window, usoop->sprite, NULL);
@@ -111,6 +113,8 @@ int main(void)
     set_perso(window, &usoop);
     set_ennemie(window, &ennemie);
     set_background(&background);
+    ennemie.kill = 21;
+    background.compt = 1;
     sfRenderWindow_setMouseCursorVisible(window, sfFalse);
     game(window, &usoop, &ennemie, &background);
     sfRenderWindow_destroy(window);

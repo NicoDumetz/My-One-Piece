@@ -149,7 +149,7 @@ static void animation_final(struct sprite *usoop, struct sprite *ennemie)
         return fly_luffy(usoop);
     if (usoop->bo == 5) {
         set_scene(usoop, ennemie);
-        usoop->life.size.x -= 0.3;
+        usoop->life.size.x -= usoop->life.size.x <= 0 ? 0 : 0.3;
         sfRectangleShape_setSize(usoop->life.bar, usoop->life.size);
     }
     if (ennemie->life.size.x <= 0)
