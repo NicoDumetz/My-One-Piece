@@ -107,6 +107,8 @@ void end_game(sfRenderWindow *window, struct sprite *background, struct sprite
     *usoop);
 int my_putstr(char const *str);
 int my_hunter(void);
+void cleanup(struct sprite *usoop, struct sprite *ennemie, sprite
+    *background);
 
 
 #endif

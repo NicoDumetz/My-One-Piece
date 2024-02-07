@@ -83,7 +83,7 @@ static void pause_game(sfRenderWindow *window, struct sprite *background,
 
     sfSprite_setTexture(sprite, texture, sfTrue);
     sfRenderWindow_setMouseCursorVisible(window, sfTrue);
-    sfSprite_setPosition(sprite, (sfVector2f){1500 / 2 - 150, 900 /2 - 150});
+    sfSprite_setPosition(sprite, (sfVector2f){1500 / 2 - 150, 900 / 2 - 150});
     sfRenderWindow_clear(window, sfWhite);
     sfRenderWindow_drawSprite(window, sprite, NULL);
     sfRenderWindow_display(window);
@@ -161,6 +161,7 @@ int my_hunter(void)
     set_background(&background);
     sfRenderWindow_setMouseCursorVisible(window, sfFalse);
     game(window, &usoop, &ennemie, &background);
+    cleanup(&usoop, &ennemie, &background);
     sfRenderWindow_destroy(window);
     return 0;
 }

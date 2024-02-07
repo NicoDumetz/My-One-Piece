@@ -24,9 +24,27 @@ static int readme(int ac, char **argv)
         return 84;
 }
 
+void cleanup(struct sprite *usoop, struct sprite *ennemie, sprite
+    *background)
+{
+    sfTexture_destroy(usoop->texture);
+    sfSprite_destroy(usoop->sprite);
+    sfClock_destroy(usoop->clock);
+    sfMusic_destroy(usoop->music);
+    sfText_destroy(usoop->score.text);
+    sfRectangleShape_destroy(usoop->life.bar);
+    sfRectangleShape_destroy(usoop->back_life.bar);
+    sfTexture_destroy(ennemie->texture);
+    sfSprite_destroy(ennemie->sprite);
+    sfClock_destroy(ennemie->clock);
+    sfTexture_destroy(background->texture);
+    sfSprite_destroy(background->sprite);
+    sfClock_destroy(background->clock);
+}
+
 int main(int ac, char **av)
 {
     if (ac > 1)
-        readme(ac, av);
+        return readme(ac, av);
     return my_hunter();
 }
