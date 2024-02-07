@@ -52,7 +52,7 @@ static int readme(int ac, char **argv)
         return 84;
 }
 
-static cleanup_end(struct sprite *usoop, struct sprite *ennemie, sprite
+static void cleanup_end(struct sprite *usoop, struct sprite *ennemie, sprite
     *background)
 {
     sfClock_destroy(ennemie->clock);
