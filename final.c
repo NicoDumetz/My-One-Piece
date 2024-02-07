@@ -111,31 +111,33 @@ void die_end(struct sprite *usoop, struct sprite *ennemie)
 static void set_highscore(char *buffer, char *str, struct sprite *usoop, int
     fd)
 {
-    my_strcat(buffer, str);
-    sfText_setString(usoop->score.text, buffer);
+    sfText_setString(usoop->score.text, str);
+    free(buffer);
+    free(str);
     close(fd);
 }
 
 static void get_high(struct sprite *usoop, struct sprite *background)
 {
     int fd;
-    char str[100];
-    char buffer[200];
-    int min_high;
-    int sec_high;
+    char *str = malloc(100);
+    char *buffer = malloc(100);
+    int min;
+    int sec;
+    int fin;
 
     buffer[0] = '\0';
     my_strcat(buffer, "Best Score ");
-    fd = open("high_score.txt", O_RDONLY | O_WRONLY);
-    read(fd, str, 100);
-    min_high = my_getnbr(str + 11);
-    sec_high = my_getnbr(str + (my_intlen(my_getnbr(str)) + 12));
-    if ((min_high == 0 && sec_high == 0) || ( min_high > background->score.
-        min || (min_high == background->score.min && sec_high >
-        background->score.sec) ))
+    fd = open("high_score.txt", O_RDWR);
+    fin = read(fd, str, 100);
+    str[fin] = '\0';
+    min = my_getnbr(str + 11);
+    sec = my_getnbr(str + (my_intlen(my_getnbr(str)) + 12));
+    if ((min == 0 && sec == 0) || ( min > background->score.min || (min ==
+        background->score.min && sec > background->score.sec) ))
         return new_highscore(buffer, background, usoop, fd);
-    if (min_high < background->score.min || (min_high == background->score.
-        min && sec_high < background->score.sec))
+    if (min < background->score.min || (min == background->score.
+        min && sec < background->score.sec))
         return set_highscore(buffer, str, usoop, fd);
 }
 
@@ -165,13 +167,15 @@ static void set_game_over(struct sprite *background, struct sprite
     sfSprite_setScale(background->sprite, background->scale);
     sfText_setFillColor(background->score.text, sfWhite);
     buffer[0] = '\0';
-    my_strcat(buffer, "Your score ");
-    my_strcat(buffer, int_to_str(background->score.min));
-    my_strcat(buffer, ":");
-    my_strcat(buffer, int_to_str(background->score.sec));
-    sfText_setString(background->score.text, buffer);
-    sfText_setPosition(background->score.text, (sfVector2f){10, 10});
-    set_best_score(usoop, background);
+    if (usoop->win == 4) {
+        my_strcat(buffer, "Your score ");
+        my_strcat(buffer, int_to_str(background->score.min));
+        my_strcat(buffer, ":");
+        my_strcat(buffer, int_to_str(background->score.sec));
+        sfText_setString(background->score.text, buffer);
+        sfText_setPosition(background->score.text, (sfVector2f){10, 10});
+        set_best_score(usoop, background);
+    }
 }
 
 void end_game(sfRenderWindow *window, struct sprite *background, struct sprite

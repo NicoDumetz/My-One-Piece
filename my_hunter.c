@@ -52,10 +52,16 @@ int main(int ac, char **av)
 void new_highscore(char *buffer, struct sprite *background, struct
     sprite *usoop, int fd)
 {
-        my_strcat(buffer, int_to_str(background->score.min));
-        my_strcat(buffer, ":");
-        my_strcat(buffer, int_to_str(background->score.sec));
-        sfText_setString(usoop->score.text, buffer);
-        write(fd, buffer, my_strlen(buffer));
-        close(fd);
+    int ca;
+    int len;
+
+    my_strcat(buffer, int_to_str(background->score.min));
+    my_strcat(buffer, ":");
+    my_strcat(buffer, int_to_str(background->score.sec));
+    ca = open("high_score.txt", O_RDWR | O_TRUNC);
+    write(ca, buffer, my_strlen(buffer));
+    close(ca);
+    sfText_setString(usoop->score.text, buffer);
+    free(buffer);
+    close(fd);
 }

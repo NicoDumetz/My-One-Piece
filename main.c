@@ -44,6 +44,9 @@ void pop_event(sfRenderWindow *window, struct sprite *usoop, struct sprite
         }
         if (event.type == sfEvtKeyPressed || event.key.code == sfKeyEscape)
             background->pause = 1;
+        if ((event.type == sfEvtKeyPressed || event.key.code ==
+        sfKeyEscape) && usoop->win > 0)
+            sfRenderWindow_close(window);
     }
 }
 
