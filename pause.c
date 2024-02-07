@@ -22,26 +22,18 @@ static void pause_sound(struct sprite *background, sfEvent event, sfSprite
     }
 }
 
-static void event_pause(sfRenderWindow *window, struct sprite *usoop)
+static void event_pause(sfRenderWindow *window, struct sprite *background,
+    sfSprite *sprite_soundon, sfSprite *sprite_soundoff)
 {
     sfEvent event;
 
     while (sfRenderWindow_pollEvent(window, &event)) {
         if (event.type == sfEvtClosed) {
             sfRenderWindow_close(window);
-            usoop->pause = 0;
+            background->pause = 0;
         }
         if (event.type == sfEvtKeyReleased && event.key.code == sfKeyEscape)
-            usoop->pause = 0;
-    }
-}
-
-static void event_sound(sfRenderWindow *window, struct sprite *background,
-    sfSprite *sprite_soundon, sfSprite *sprite_soundoff)
-{
-    sfEvent event;
-
-    while (sfRenderWindow_pollEvent(window, &event)) {
+            background->pause = 0;
         if ( (event.type == sfEvtKeyPressed || event.type ==
         sfEvtMouseButtonPressed) && event.mouseButton.button == sfMouseLeft)
             pause_sound(background, event, sprite_soundon, sprite_soundoff);
@@ -95,10 +87,8 @@ void pause_game(sfRenderWindow *window, struct sprite *background,
     sfSprite_setTexture(sprite_soundoff, texture_soundoff, sfTrue);
     sfSprite_setTexture(sprite_soundon, soundon, sfTrue);
     set_pause(window, sprite, sprite_soundoff, sprite_soundon);
-    while (usoop->pause == 1) {
-        event_pause(window, usoop);
-        event_sound(window, background, sprite_soundon, sprite_soundoff);
-    }
+    while (background->pause == 1)
+        event_pause(window, background, sprite_soundon, sprite_soundoff);
     clean_sprite(sprite, sprite_soundon, sprite_soundoff);
     clean_text(texture, texture_soundoff, soundon);
     sfRenderWindow_setMouseCursorVisible(window, sfFalse);

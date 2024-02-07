@@ -38,6 +38,7 @@ void set_background(struct sprite *background)
     background->pos.x = -140;
     background->pos.y = -25;
     background->compt = 0;
+    background->pause = 0;
     background->clock = sfClock_create();
     background->score.text = sfText_create();
     sfText_setFont(background->score.text, font);

@@ -74,7 +74,7 @@ static char *my_revstr_convert(char *str)
 
 char *int_to_str(int nb)
 {
-    char buffer[100];
+    char *buffer = malloc(100);
     int i = 0;
 
     if (nb == 0) {

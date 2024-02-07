@@ -28,7 +28,7 @@ void key_pressed(sfRenderWindow *window, sfEvent event,
 }
 
 void pop_event(sfRenderWindow *window, struct sprite *usoop, struct sprite
-    *ennemie)
+    *ennemie, struct sprite *background)
 {
     sfEvent event;
 
@@ -43,7 +43,7 @@ void pop_event(sfRenderWindow *window, struct sprite *usoop, struct sprite
             usoop->life.size.x = 100;
         }
         if (event.type == sfEvtKeyPressed || event.key.code == sfKeyEscape)
-            usoop->pause = 1;
+            background->pause = 1;
     }
 }
 
@@ -75,7 +75,7 @@ static void display(sfRenderWindow *window, struct sprite *usoop,
 {
     if (usoop->win > 0)
         return end_game(window, background, usoop);
-    if (usoop->pause == 1)
+    if (background->pause == 1)
         return pause_game(window, background, usoop);
     display_background(window, background, ennemie);
     sfRenderWindow_drawSprite(window, ennemie->sprite, NULL);
@@ -102,7 +102,7 @@ void game(sfRenderWindow *window, struct sprite *usoop,
     struct sprite *ennemie, struct sprite *background)
 {
     while (sfRenderWindow_isOpen(window)) {
-        pop_event(window, usoop, ennemie);
+        pop_event(window, usoop, ennemie, background);
         sfRenderWindow_clear(window, sfBlack);
         animation(window, usoop, ennemie);
         display(window, usoop, ennemie, background);

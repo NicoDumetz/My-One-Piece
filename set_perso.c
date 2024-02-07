@@ -23,6 +23,7 @@ void set_target(struct sprite *usoop)
     sfSprite_setTexture(usoop->proj.sprite, usoop->proj.texture, sfTrue);
     sfSprite_setPosition(usoop->proj.sprite, usoop->proj.pos);
     usoop->bo = 0;
+    usoop->win = 0;
     set_life_perso(usoop);
 }
 
@@ -31,7 +32,6 @@ void set_perso(sfRenderWindow *window, struct sprite *usoop)
     usoop->texture = sfTexture_createFromFile("sprites/usooprun.png",
     NULL);
     usoop->compt = 0;
-    usoop->pause = 0;
     usoop->sprite = sfSprite_create();
     usoop->pos.x = 0;
     usoop->pos.y = 650;
@@ -100,12 +100,11 @@ void set_ennemie(sfRenderWindow *window, struct sprite *ennemie)
     ennemie->pos.y = 400;
     ennemie->scale.x = 1.2;
     ennemie->scale.y = 1.2;
-    ennemie->rect.top = 0;
-    ennemie->rect.left = 0;
-    ennemie->rect.width = 178;
-    ennemie->rect.height = 152;
+    ennemie->rect = (sfIntRect){0, 0, 178, 152};
     ennemie->clock = sfClock_create();
     ennemie->speed = 30;
+    ennemie->cursor.bo = 0;
+    ennemie->proj.act = 0;
     set_cursor(ennemie);
     sfSprite_setScale(ennemie->sprite, ennemie->scale);
     sfSprite_setTexture(ennemie->sprite, ennemie->texture, sfTrue);
