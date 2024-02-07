@@ -44,8 +44,11 @@ void respawn_ennemie(struct sprite *ennemie)
 void check_death(struct sprite *ennemie, sfEvent event, sfRenderWindow
     *window, struct sprite *usoop)
 {
-    int mouseX = event.mouseButton.x;
-    int mouseY = event.mouseButton.y;
+    sfVector2u windowSize = sfRenderWindow_getSize(window);
+    float scale_X = (float)windowSize.x / 1500;
+    float scale_Y = (float)windowSize.y / 900;
+    int mouseX = event.mouseButton.x / scale_X;
+    int mouseY = event.mouseButton.y / scale_Y;
     sfFloatRect spriteBounds = sfSprite_getGlobalBounds(ennemie->sprite);
 
     ennemie->cursor.pos.x = mouseX - (118 / 2);

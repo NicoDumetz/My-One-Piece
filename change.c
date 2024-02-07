@@ -59,9 +59,12 @@ void set_pos_cursor(struct sprite *usoop, sfRenderWindow *window)
 {
     sfVector2i mousePosition = (sfVector2i)sfMouse_getPositionRenderWindow
     (window);
+    sfVector2u windowSize = sfRenderWindow_getSize(window);
+    float scale_X = (float)windowSize.x / 1500;
+    float scale_Y = (float)windowSize.y / 900;
 
     sfSprite_setPosition(usoop->cursor.sprite, (sfVector2f){(float)
-    mousePosition.x - 10, (float)mousePosition.y - 10});
+    mousePosition.x / scale_X - 10, (float)mousePosition.y / scale_Y - 10});
 }
 
 static void barbe_noir(struct sprite *ennemie)

@@ -6,22 +6,34 @@
 */
 #include "include/my_hunter.h"
 
+static void lunch_fire(sfRenderWindow *window, sfEvent event,
+    struct sprite *usoop, struct sprite *ennemie)
+{
+    sfVector2u windowSize = sfRenderWindow_getSize(window);
+    float scale_X = (float)windowSize.x / 1500;
+    float scale_Y = (float)windowSize.y / 900;
+
+    usoop->bo = 2;
+    ennemie->proj.act = 1;
+    ennemie->proj.pos = (sfVector2f){1250, 680};
+    ennemie->proj.mousepos = (sfVector2i)
+    sfMouse_getPositionRenderWindow(window);
+    ennemie->proj.mousepos.x = ennemie->proj.mousepos.x / scale_X;
+    ennemie->proj.mousepos.y = ennemie->proj.mousepos.y / scale_Y;
+    ennemie->proj.angle = atan2(ennemie->proj.mousepos.y -
+    ennemie->proj.pos.y, ennemie->proj.mousepos.x -
+    ennemie->proj.pos.x) * 180 / PI;
+    ennemie->proj.angle += 180;
+    sfSprite_setRotation(ennemie->proj.sprite, ennemie->proj.angle);
+    check_death(ennemie, event, window, usoop);
+}
+
 void key_pressed(sfRenderWindow *window, sfEvent event,
     struct sprite *usoop, struct sprite *ennemie)
 {
     if (event.mouseButton.button == sfMouseLeft)
         if (usoop->bo == 1) {
-            usoop->bo = 2;
-            ennemie->proj.act = 1;
-            ennemie->proj.pos = (sfVector2f){1250, 680};
-            ennemie->proj.mousepos = (sfVector2i)
-            sfMouse_getPositionRenderWindow(window);
-            ennemie->proj.angle = atan2(ennemie->proj.mousepos.y -
-            ennemie->proj.pos.y, ennemie->proj.mousepos.x - ennemie->proj.pos.
-            x) * 180 / PI;
-            ennemie->proj.angle += 180;
-            sfSprite_setRotation(ennemie->proj.sprite, ennemie->proj.angle);
-            check_death(ennemie, event, window, usoop);
+            lunch_fire(window, event, usoop, ennemie);
         }
         if (usoop->bo == 5)
             check_death_gear(ennemie, event, window, usoop);
