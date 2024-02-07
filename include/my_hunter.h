@@ -23,6 +23,8 @@
     #include <time.h>
     #include <math.h>
     #include <stdlib.h>
+    #include <fcntl.h>
+    #include <unistd.h>
     #define PI 3.14159265358979323846
 
 typedef struct chrono {
@@ -66,6 +68,7 @@ typedef struct sprite {
     health back_life;
     chrono score;
     int win;
+    int pause;
 } sprite;
 void animation_fire(sfRenderWindow *window, struct sprite *usoop);
 void animation_walk(sfRenderWindow *window, struct sprite *usoop);
@@ -102,6 +105,8 @@ int my_strlen(char const *str);
 char *int_to_str(int nb);
 void end_game(sfRenderWindow *window, struct sprite *background, struct sprite
     *usoop);
+int my_putstr(char const *str);
+int my_hunter(void);
 
 
 #endif

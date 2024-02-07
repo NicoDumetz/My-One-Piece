@@ -104,26 +104,38 @@ void die_end(struct sprite *usoop, struct sprite *ennemie)
         sfSprite_setTexture(ennemie->sprite, ennemie->texture, sfTrue);
         sfSprite_setTextureRect(ennemie->sprite, ennemie->rect);
         sfSprite_setTextureRect(ennemie->sprite, ennemie->rect);
-    }else if (sfTime_asSeconds(elapsed) >= 1.5)
-        usoop->win = 1;
+    }else if (sfTime_asSeconds(elapsed) >= 1.5 && usoop->win < 3)
+        usoop->win = 2;
 }
 
 static void set_game_over(struct sprite *background, struct sprite
     *usoop)
 {
+    char buffer[100];
+
     background->texture = sfTexture_createFromFile("end.png", NULL);
     background->sprite = sfSprite_create();
     background->scale = (sfVector2f){1.8, 1.30};
-    usoop->win = 3;
+    usoop->win = usoop->win == 1 ? 3 : 4;
     sfSprite_setTexture(background->sprite, background->texture, sfTrue);
     sfSprite_setScale(background->sprite, background->scale);
+    sfText_setFillColor(background->score.text, sfWhite);
+    buffer[0] = '\0';
+    my_strcat(buffer, "Your score ");
+    my_strcat(buffer, int_to_str(background->score.min));
+    my_strcat(buffer, ":");
+    my_strcat(buffer, int_to_str(background->score.sec));
+    sfText_setString(background->score.text, buffer);
+    sfText_setPosition(background->score.text, (sfVector2f){10, 10});
 }
 
 void end_game(sfRenderWindow *window, struct sprite *background, struct sprite
     *usoop)
 {
-    if (usoop->win == 1)
+    if (usoop->win == 1 || usoop->win == 2)
         set_game_over(background, usoop);
     sfRenderWindow_drawSprite(window, background->sprite, NULL);
+    if (usoop->win == 4)
+        sfRenderWindow_drawText(window, background->score.text, NULL);
     sfRenderWindow_display(window);
 }

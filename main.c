@@ -38,8 +38,12 @@ void pop_event(sfRenderWindow *window, struct sprite *usoop, struct sprite
         if ( event.type == sfEvtKeyPressed ||
             event.type == sfEvtMouseButtonPressed)
             key_pressed(window, event, usoop, ennemie);
-        if (usoop->life.size.x <= 0)
+        if (usoop->life.size.x <= 0) {
             usoop->win = 1;
+            usoop->life.size.x = 100;
+        }
+        if (event.type == sfEvtKeyPressed || event.key.code == sfKeyEscape)
+            usoop->pause = 1;
     }
 }
 
@@ -55,21 +59,61 @@ static void display_life_bar(sfRenderWindow *window, struct sprite *usoop,
     }
 }
 
-static void display(sfRenderWindow *window, struct sprite *usoop,
-    struct sprite *ennemie, struct sprite *background)
+static void event_pause(sfRenderWindow *window, struct sprite *background,
+    struct sprite *usoop)
+{
+    sfEvent event;
+
+    while (sfRenderWindow_pollEvent(window, &event)) {
+        if (event.type == sfEvtClosed) {
+            sfRenderWindow_close(window);
+            usoop->pause = 0;
+        }
+        if (event.type == sfEvtKeyReleased && event.key.code == sfKeyEscape)
+            usoop->pause = 0;
+    }
+}
+
+static void pause_game(sfRenderWindow *window, struct sprite *background,
+    struct sprite *usoop)
+{
+    sfTexture *texture = sfTexture_createFromFile("sprites/pause.png",
+    NULL);
+    sfSprite *sprite = sfSprite_create();
+
+    sfSprite_setTexture(sprite, texture, sfTrue);
+    sfRenderWindow_setMouseCursorVisible(window, sfTrue);
+    sfRenderWindow_drawSprite(window, sprite, NULL);
+    sfRenderWindow_display(window);
+    while (usoop->pause == 1) {
+        event_pause(window, background, usoop);
+    }
+    sfRenderWindow_setMouseCursorVisible(window, sfFalse);
+    return;
+}
+
+static void disp_cursor(sfRenderWindow *window, struct sprite *ennemie)
 {
     sfTime elapsed = sfClock_getElapsedTime(ennemie->cursor.clock);
 
-    if (usoop->win > 0)
-        return end_game(window, background, usoop);
-    display_background(window, background, ennemie);
-    sfRenderWindow_drawSprite(window, ennemie->sprite, NULL);
-    sfRenderWindow_drawSprite(window, usoop->sprite, NULL);
     if (ennemie->cursor.bo == 1) {
         sfRenderWindow_drawSprite(window, ennemie->cursor.sprite, NULL);
         if (sfTime_asSeconds(elapsed) >= 0.1)
             ennemie->cursor.bo = 0;
     }
+}
+
+static void display(sfRenderWindow *window, struct sprite *usoop,
+    struct sprite *ennemie, struct sprite *background)
+{
+    if (usoop->win > 0)
+        return end_game(window, background, usoop);
+    if (usoop->pause == 1)
+        return pause_game(window, background, usoop);
+    display_background(window, background, ennemie);
+    sfRenderWindow_drawSprite(window, ennemie->sprite, NULL);
+    sfRenderWindow_drawSprite(window, usoop->sprite, NULL);
+    disp_cursor(window, ennemie);
     if (usoop->bo == 2)
         sfRenderWindow_drawSprite(window, usoop->proj.sprite, NULL);
     calculate_coord_proj(window, usoop, ennemie);
@@ -99,7 +143,7 @@ void game(sfRenderWindow *window, struct sprite *usoop,
     }
 }
 
-int main(void)
+int my_hunter(void)
 {
     sfVideoMode mode = {1500, 900, 32};
     sfRenderWindow *window = sfRenderWindow_create(mode, "My One Piece",

@@ -31,6 +31,7 @@ void set_perso(sfRenderWindow *window, struct sprite *usoop)
     usoop->texture = sfTexture_createFromFile("sprites/usooprun.png",
     NULL);
     usoop->compt = 0;
+    usoop->pause = 0;
     usoop->sprite = sfSprite_create();
     usoop->pos.x = 0;
     usoop->pos.y = 650;
