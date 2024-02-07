@@ -32,7 +32,7 @@ static void event_pause(sfRenderWindow *window, struct sprite *background,
             sfRenderWindow_close(window);
             background->pause = 0;
         }
-        if (event.type == sfEvtKeyReleased && event.key.code == sfKeyEscape)
+        if (event.type == sfEvtKeyPressed && event.key.code == sfKeyEscape)
             background->pause = 0;
         if ( (event.type == sfEvtKeyPressed || event.type ==
         sfEvtMouseButtonPressed) && event.mouseButton.button == sfMouseLeft)
